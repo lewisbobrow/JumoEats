@@ -5,14 +5,6 @@ import 'package:web_scraper/web_scraper.dart';
 
 void main() {
 
-  List breakfastItems = [];
-  List lunchItems = [];
-  List dinnerItems = [];
-
-  Firestore.instance.collection('MenuItems').document('UGdmz4jAeYyuRWLpj5Mp')
-  .setData({ 'Breakfast': breakfastItems, 'Lunch': lunchItems, 
-             'Dinner': dinnerItems });
-
   runApp(MyApp());
 }
 
@@ -26,7 +18,7 @@ class MyAppState extends State<MyApp> {
   // initialize WebScraper by passing base url of website
   final webScraper = WebScraper('http://menus.tufts.edu');
 
-// Response of getElement is always List<Map<String, dynamic>>
+  // Response of getElement is always List<Map<String, dynamic>>
   List<Map<String, dynamic>> breakfastItems;
   List<Map<String, dynamic>> lunchItems;
   List<Map<String, dynamic>> dinnerItems;
@@ -45,6 +37,11 @@ class MyAppState extends State<MyApp> {
             'div.thumbnail > div.caption > h4 > a.title', ['href', 'title']);
         dinnerItems = webScraper.getElement(
             'div.thumbnail > div.caption > h4 > a.title', ['href', 'title']);
+        
+            //store menu items in firebase
+            Firestore.instance.collection('MenuItems').document()
+            .setData({ 'Breakfast': breakfastItems, 'Lunch': lunchItems, 
+                       'Dinner': dinnerItems });
       });
 
     }
